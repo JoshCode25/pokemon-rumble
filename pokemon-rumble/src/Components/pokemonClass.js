@@ -1,4 +1,4 @@
-class Pokemon {
+export default class Pokemon {
     constructor(id, level) { //id can be a pokemon's name or number
         this.level = level;
 

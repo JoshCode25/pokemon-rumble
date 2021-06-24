@@ -8,7 +8,8 @@ class App extends Component {
     super()
     this.state = {
       pokemonList: [],
-      searchfield: ''
+      searchfield: '',
+      displayPokemon: {}
     }
   }
 
@@ -20,13 +21,17 @@ class App extends Component {
 
   onSearchChange = (event) => {
     this.setState({ searchfield: event.target.value })
+    
+    const pikachu = new Pokemon(searchfield, 30);
+    pikachu.getInfo();
+    this.setState({displayPokemon: pikachu});
   }
 
   render() {
     return (
       <div className="App">
         <SearchBox />
-        <PokemonInfo />
+        <PokemonInfo pokemon={displayPokemon}/>
       </div>
     );
   }

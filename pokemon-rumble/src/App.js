@@ -2,6 +2,7 @@ import './App.css';
 import React, {Component} from 'react';
 import SearchBox from './Components/SearchBox';
 import PokemonInfo from './Components/PokemonInfo.js';
+import Pokemon from './Components/pokemonClass.js'
 
 class App extends Component {
   constructor() {
@@ -13,16 +14,10 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response=> response.json())
-      .then(users => {this.setState({ robots: users})});
-  }
-
   onSearchChange = (event) => {
-    this.setState({ searchfield: event.target.value })
+    this.setState({searchfield: event.target.value })
     
-    const pikachu = new Pokemon(searchfield, 30);
+    const pikachu = new Pokemon({state.searchfield}, 30);
     pikachu.getInfo();
     this.setState({displayPokemon: pikachu});
   }
@@ -30,8 +25,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <SearchBox />
-        <PokemonInfo pokemon={displayPokemon}/>
+        <SearchBox searchChange={this.onSearchChange}/>
+        <PokemonInfo pokemon={{state.displayPokemon}}/>
       </div>
     );
   }

@@ -1,15 +1,13 @@
-import './App.css';
 import React, {Component} from 'react';
 import SearchBox from './Components/SearchBox';
 import PokemonInfo from './Components/PokemonInfo.js';
 import pikachu from './Components/Pokemon/pikachu';
-import charizard from './Components/Pokemon/charizard';
 
-class App extends Component {
+class PokemonCard extends Component {
   constructor() {
     super()
     this.state = {
-      pokemonList: [pikachu, charizard],
+      pokemonList: [pikachu],
       searchfield: '',
     }
   }
@@ -24,18 +22,12 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App mw7 center">
+      <div className="App">
         <SearchBox searchChange={this.onSearchChange}/>
-        {
-          this.state.pokemonList.map((pokemon, i) => {
-            return (
-              <PokemonInfo key={`${pokemon.name}${i}`} pokemon={pokemon}/>
-            )
-          })
-        }
+        <PokemonInfo pokemon={this.state.pokemonList[0]}/>
       </div>
     );
   }
 }
 
-export default App;
+export default PokemonCard;

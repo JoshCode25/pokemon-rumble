@@ -1,11 +1,12 @@
 import React from 'react';
 
-const Card = ({ name, id }) => {
+const Card = ({ name, id, level }) => {
   return (
-    <div className='tc grow bg-light-green br3 pa3 ma2 dib bw2 shadow-5'>
+    <div className='grow ph4'>
       <img alt='pokemon' src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`} />
       <div>
         <h2>{name}</h2>
+        <h3>{`Level: ${level}`}</h3>
       </div>
     </div>
   );

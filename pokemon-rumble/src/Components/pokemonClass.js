@@ -56,7 +56,9 @@ export default class Pokemon {
                 const statName = stat.stat.name;
                 const baseStatValue = stat.base_stat;
                 const baseStat = {name: statName, value: parseInt(baseStatValue)};
-                const currentStat = {name: statName, value: parseInt(baseStatValue, 10) + this.level}; //adds level to base stats to approximate growth
+                const currentStat = {
+                    name: statName, 
+                    value: Math.ceil(parseInt(baseStatValue, 10) + this.level*parseInt(baseStatValue)/50)}; //adds level/50 to base stats and rounds up
 
                 this.baseStats.push(baseStat);
                 this.currentStats.push(currentStat)

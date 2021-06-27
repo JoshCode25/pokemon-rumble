@@ -1,9 +1,10 @@
 export default class Pokemon {
-    constructor(id, level) { //id can be a pokemon's name or number
+    constructor(identifier, level) { //id can be a pokemon's name or number
         this.level = level;
 
         this.name = '';
-        this.url = `https://pokeapi.co/api/v2/pokemon/${id}`; //adjusts url based on id given
+        this.id = '';
+        this.url = `https://pokeapi.co/api/v2/pokemon/${identifier}`; //adjusts url based on id given
         this.movesList = [];
         this.learnedMovesList = [];
         this.currentMovesList = [];
@@ -21,6 +22,7 @@ export default class Pokemon {
             const response = await fetch(this.url);
             const data = await response.json();
             this.name = data.name;
+            this.id = data.id;
             console.log(data.name);
             console.log(data.stats);
 

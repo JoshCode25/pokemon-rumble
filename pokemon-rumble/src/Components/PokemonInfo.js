@@ -5,7 +5,7 @@ import MoveInfo from './MoveInfo';
 
 const PokemonInfo = ({pokemon}) => {
     return (
-        <div className='flex justify-center items-center tc bg-light-green br3 pa4 ma2 dib bw2 shadow-5'>
+        <div className='flex justify-center items-center tc bg-light-green br3 pa4 ma1 dib bw2 shadow-5'>
             <Card name={pokemon.name} id={pokemon.id} level={pokemon.level} />
             <div>
                 {

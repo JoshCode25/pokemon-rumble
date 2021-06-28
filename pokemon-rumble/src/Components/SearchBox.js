@@ -1,7 +1,7 @@
   
 import React from 'react';
 
-const SearchBox = ({ updateInput }) => {
+const SearchBox = ({ updateInput, levelUp }) => {
   return (
     <div className='pa2 flex justify-center'>
       <input
@@ -23,6 +23,11 @@ const SearchBox = ({ updateInput }) => {
       <input
         type='button'
         value='submit'
+      />
+      <input
+        type='button'
+        value='Level Up'
+        onClick={levelUp}
       />
     </div>
   );

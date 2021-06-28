@@ -3,16 +3,15 @@ import React, {Component} from 'react';
 import SearchBox from './Components/SearchBox';
 import PokemonInfo from './Components/PokemonInfo.js';
 import pikachu from './Components/Pokemon/pikachu';
-import charizard from './Components/Pokemon/charizard';
 import Pokemon from './Components/pokemonClass';
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      pokemonList: [pikachu, charizard],
       identifierField: '',
-      levelField: ''
+      levelField: '',
+      displayPokemon: pikachu
     }
   }
 
@@ -55,17 +54,30 @@ class App extends Component {
       }
   }
 
+  levelUp = () => {
+    console.log(this.state.displayPokemon.currentStats);
+    const tempDisplayPoke = Object.assign({}, this.state.displayPokemon);
+    const currentStats = tempDisplayPoke.currentStats.slice();
+    const baseStats = tempDisplayPoke.baseStats.slice();
+    console.log(baseStats);
+    const statIncrement = 1/50;
+
+    const newStats = currentStats.map((stat, i) => {
+      const baseStat = baseStats[i].value;
+      const newStatValue = stat.value + statIncrement*baseStat;
+      return Math.ceil(newStatValue);
+    })
+
+    tempDisplayPoke.currentStats = newStats;
+    tempDisplayPoke.level++;
+    this.setState({displayPokemon: tempDisplayPoke})
+  }
+
   render() {
     return (
       <div className="App mw7 center">
-        <SearchBox updateInput={this.updateInput}/>
-        {
-          this.state.pokemonList.map((pokemon, i) => {
-            return (
-              <PokemonInfo key={`${pokemon.name}${i}`} pokemon={pokemon}/>
-            )
-          })
-        }
+        <SearchBox updateInput={this.updateInput} levelUp={this.levelUp}/>
+        <PokemonInfo pokemon={this.state.displayPokemon}/>
       </div>
     );
   }

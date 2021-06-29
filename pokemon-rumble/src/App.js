@@ -55,21 +55,27 @@ class App extends Component {
   }
 
   levelUp = () => {
-    console.log(this.state.displayPokemon.currentStats);
+    //update stats
     const tempDisplayPoke = Object.assign({}, this.state.displayPokemon);
+    tempDisplayPoke.level++;
+
     const currentStats = tempDisplayPoke.currentStats.slice();
     const baseStats = tempDisplayPoke.baseStats.slice();
-    console.log(baseStats);
-    const statIncrement = 1/50;
 
     const newStats = currentStats.map((stat, i) => {
-      const baseStat = baseStats[i].value;
-      const newStatValue = stat.value + statIncrement*baseStat;
-      return Math.ceil(newStatValue);
-    })
+      const newStat = {name:'', value:0};
+      const baseStatValue = baseStats[i].value;
+      newStat.name = stat.name
+      if (newStat.name === 'hp') {
+        newStat.value = Math.floor((2*parseInt(baseStatValue, 10) + this.level)/100 + 5)
+      } else {
+        newStat.value = Math.floor((2*parseInt(baseStatValue, 10) + this.level)/100 + this.level +10)
+      }
+
+      return newStat;
+    }, this.state.displayPokemon)
 
     tempDisplayPoke.currentStats = newStats;
-    tempDisplayPoke.level++;
     this.setState({displayPokemon: tempDisplayPoke})
   }
 

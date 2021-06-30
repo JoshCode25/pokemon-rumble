@@ -2,6 +2,8 @@ const charizard = {
     name: 'Charizard',
     id: 6,
     level: 56,
+    baseExperience: 240,
+    currentExperience: 175616,
     baseStats: [
         {
             "name": "hp",
@@ -31,27 +33,27 @@ const charizard = {
     currentStats: [
         {
             "name": "hp",
-            "value": 166
+            "value": 153
         },
         {
             "name": "attack",
-            "value": 179
+            "value": 99
         },
         {
             "name": "defense",
-            "value": 166
+            "value": 92
         },
         {
             "name": "special-attack",
-            "value": 232
+            "value": 127
         },
         {
             "name": "special-defense",
-            "value": 181
+            "value": 100
         },
         {
             "name": "speed",
-            "value": 212
+            "value": 117
         }
     ],
     learnedMovesList: [

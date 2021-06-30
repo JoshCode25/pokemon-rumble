@@ -5,7 +5,7 @@ export default class Pokemon {
         this.name = '';
         this.id = '';
         this.url = `https://pokeapi.co/api/v2/pokemon/${identifier}`; //adjusts url based on id given
-        this.movesList = [];
+        // this.availableMovesList = [];
         this.learnedMovesList = [];
         this.currentMovesList = [];
         this.types = [];
@@ -17,89 +17,90 @@ export default class Pokemon {
         this.spriteList = [];
     }
 
-    async getInfo() {
-        try{
-            const response = await fetch(this.url);
-            const data = await response.json();
-            this.name = data.name;
-            this.id = data.id;
-            console.log(data.name);
-            console.log(data.stats);
+    // async getInfo() {
+    //     try{
+    //         const response = await fetch(this.url);
+    //         const data = await response.json();
+    //         this.name = data.name;
+    //         this.id = data.id;
+    //         this.baseExperience = data.base_experience;
+    //         this.currentExperience = Math.pow(this.level, 3);
+    //         console.log(data.name);
+    //         console.log(data.stats);
 
-            //get moves
-            data.moves.map(async function(move) {
-                const moveUrl = move.move.url; //gets move url from pokemon info
-                const moveDataResponse = await fetch(moveUrl); //fetch move info
-                const moveData = await moveDataResponse.json(); //convert move info to json
-                const levelLearned = move.version_group_details[0].level_learned_at; //get info when the pokemon learns the move         
+    //         //get moves
+    //         data.moves.map(async function(move) {
+    //             const moveUrl = move.move.url; //gets move url from pokemon info
+    //             const moveDataResponse = await fetch(moveUrl); //fetch move info
+    //             const moveData = await moveDataResponse.json(); //convert move info to json
+    //             const levelLearned = move.version_group_details[0].level_learned_at; //get info when the pokemon learns the move         
                 
-                const moveInfo = { //consolidates move info to add to array
-                    name: moveData.name,
-                    levelLearnedAt: parseInt(levelLearned, 10),
-                    accuracy: parseInt(moveData.accuracy, 10),
-                    power: parseInt(moveData.power, 10),
-                    type: moveData.type.name,
-                    damageClass: moveData.damage_class.name
-                }
-                this.movesList.push(moveInfo);
-                if (levelLearned !== 0) { //only adds moves the pokemon will learn naturally by leveling up
-                    this.learnedMovesList.push(moveInfo);
-                }
-                if (this.level >= levelLearned && levelLearned !== 0) { //adds moves to current moves depending on pokemon's level
-                    this.currentMovesList.push(moveInfo);
-                    if (this.currentMovesList.length > 4) {
-                        this.currentMovesList.shift();
-                    }
-                }
-            }, this);
+    //             const moveInfo = { //consolidates move info to add to array
+    //                 name: moveData.name,
+    //                 levelLearnedAt: parseInt(levelLearned, 10),
+    //                 accuracy: parseInt(moveData.accuracy, 10),
+    //                 power: parseInt(moveData.power, 10),
+    //                 type: moveData.type.name,
+    //                 damageClass: moveData.damage_class.name
+    //             }
+    //             // this.movesList.push(moveInfo);
+    //             if (levelLearned !== 0) { //only adds moves the pokemon will learn naturally by leveling up
+    //                 this.learnedMovesList.push(moveInfo);
+    //             }
+    //             if (this.level >= levelLearned && levelLearned !== 0) { //adds moves to current moves depending on pokemon's level
+    //                 this.currentMovesList.push(moveInfo);
+    //                 if (this.currentMovesList.length > 4) {
+    //                     this.currentMovesList.shift();
+    //                 }
+    //             }
+    //         }, this);
 
-            //get stats
-            data.stats.map(async function(stat) {
-                const statName = stat.stat.name;
-                const baseStatValue = stat.base_stat;
-                const baseStat = {name: statName, value: parseInt(baseStatValue)};
-                const currentStat = {name: statName, value: 0}
+    //         //get stats
+    //         data.stats.map(async function(stat) {
+    //             const statName = stat.stat.name;
+    //             const baseStatValue = stat.base_stat;
+    //             const baseStat = {name: statName, value: parseInt(baseStatValue)};
+    //             const currentStat = {name: statName, value: 0}
                 
-                if (statName === 'hp') {
-                    currentStat.value = Math.floor((2*parseInt(baseStatValue, 10) + this.level)/100 + 5)
-                } else {
-                    currentStat.value = Math.floor((2*parseInt(baseStatValue, 10) + this.level)/100 + this.level +10)
-                }
+    //             if (statName === 'hp') {
+    //                 currentStat.value = Math.floor((2*parseInt(baseStatValue, 10)*this.level)/100 + this.level +10)
+    //             } else {
+    //                 currentStat.value = Math.floor((2*parseInt(baseStatValue, 10)*this.level)/100 + 5)
+    //             }
 
-                this.baseStats.push(baseStat);
-                this.currentStats.push(currentStat)
-            }, this);
+    //             this.baseStats.push(baseStat);
+    //             this.currentStats.push(currentStat)
+    //         }, this);
 
-            //get types
-            data.types.map(async function(type) {
-                const typeName = type.type.name;
-                const typeUrl = type.type.url;
-                const typeObject = {name: typeName, url: typeUrl};
+    //         //get types
+    //         data.types.map(async function(type) {
+    //             const typeName = type.type.name;
+    //             const typeUrl = type.type.url;
+    //             const typeObject = {name: typeName, url: typeUrl};
 
-                this.types.push(typeObject);
+    //             this.types.push(typeObject);
 
-            }, this)
+    //         }, this)
 
-            //get sprites
-            for (let spriteKey in data.sprites) {
-                const spriteName = spriteKey;
-                const spriteUrl = data.sprites[spriteKey];
-                const spriteObject = {name: spriteName, url: spriteUrl};
+    //         //get sprites
+    //         for (let spriteKey in data.sprites) {
+    //             const spriteName = spriteKey;
+    //             const spriteUrl = data.sprites[spriteKey];
+    //             const spriteObject = {name: spriteName, url: spriteUrl};
+    //             if (spriteName !== 'versions' && spriteName !== 'other') {
+    //                 this.spriteList.push(spriteObject);
+    //             }
+    //         }
 
-                this.spriteList.push(spriteObject);
+    //     } catch(error) {
+    //         console.log(error);
+    //     } finally {
+    //         console.log(this);
+    //     }
+    // }
 
-            }
-
-        } catch(error) {
-            console.log(error);
-        } finally {
-            console.log(this);
-        }
-    }
-
-    testThis() {
-        console.log(this);
-        console.log('Level: ', this.level);
-        console.log('Moves List: ', this.movesList);
+    giveExperience(isWild=true) { //returns the amount of experience given for defeating
+        const wildMultiplier = isWild? 1 : 1.5; //gives 1.5 times experience in trainer battles
+        return this.baseExperience*this.level*wildMultiplier/7;
     }
 }

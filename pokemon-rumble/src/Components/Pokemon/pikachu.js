@@ -2,6 +2,8 @@ const pikachu = {
     name: 'Pikachu',
     id: 25,
     level: 35,
+    baseExperience: 112,
+    currentExperience: 42875,
     baseStats: [
         {
             "name": "hp",
@@ -31,27 +33,27 @@ const pikachu = {
     currentStats: [
         {
             "name": "hp",
-            "value": 60
+            "value": 69
         },
         {
             "name": "attack",
-            "value": 94
+            "value": 43
         },
         {
             "name": "defense",
-            "value": 68
+            "value": 33
         },
         {
             "name": "special-attack",
-            "value": 85
+            "value": 40
         },
         {
             "name": "special-defense",
-            "value": 85
+            "value": 40
         },
         {
             "name": "speed",
-            "value": 153
+            "value": 68
         }
     ],
     learnedMovesList: [

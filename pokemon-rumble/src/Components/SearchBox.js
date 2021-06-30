@@ -1,7 +1,7 @@
   
 import React from 'react';
 
-const SearchBox = ({ updateInput, levelUp }) => {
+const SearchBox = ({ updateDisplay, submitInput, levelUp }) => {
   return (
     <div className='pa2 flex justify-center'>
       <input
@@ -9,7 +9,8 @@ const SearchBox = ({ updateInput, levelUp }) => {
         id='searchIdentifier'
         type='search'
         placeholder='Name/Id'
-        onInput={updateInput}
+        onChange={updateDisplay}
+        onBlur={updateDisplay}
       />
       <input
         className='pa3 ba b--green bg-lightest-blue'
@@ -18,11 +19,13 @@ const SearchBox = ({ updateInput, levelUp }) => {
         min='1'
         max='100'
         placeholder='Level'
-        onInput={updateInput}
+        onChange={updateDisplay}
+        onBlur={updateDisplay}
       />
       <input
         type='button'
         value='submit'
+        onClick={submitInput}
       />
       <input
         type='button'

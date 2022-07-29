@@ -41,21 +41,37 @@ async function getNewPokemon(identifier, level) {
         });
 
         //get stats
-        data.stats.map(async function(stat) {
-            const statName = stat.stat.name;
-            const baseStatValue = stat.base_stat;
-            const baseStat = {name: statName, value: parseInt(baseStatValue)};
-            const currentStat = {name: statName, value: 0}
-            
-            if (statName === 'hp') {
-                currentStat.value = Math.floor((2*parseInt(baseStatValue, 10)*newPokemon.level)/100 + newPokemon.level +10)
-            } else {
-                currentStat.value = Math.floor((2*parseInt(baseStatValue, 10)*newPokemon.level)/100 + 5)
-            }
+        newPokemon.baseStats = data.stats.map(stat => {
+            const baseInfo = {name: stat.name, value: parseInt(stat.base_stat)};
+            return baseInfo;
+        })
 
-            newPokemon.baseStats.push(baseStat);
-            newPokemon.currentStats.push(currentStat)
-        });
+        newPokemon.currentStats = data.stats.map((stat, i) => {
+            const currentName = stat.name;
+            const currentValue = 0;
+            if (currentName === 'hp') {
+                currentValue = Math.floor((2*parseInt(newPokemon.baseStats[i].value, 10)*newPokemon.level)/100 + newPokemon.level +10)
+            } else {
+                currentValue = Math.floor((2*parseInt(newPokemon.baseStats[i].value, 10)*newPokemon.level)/100 + 5)
+            }
+            const currentStat = {name: currentName, value: currentValue};
+            return currentStat;
+        })
+        // data.stats.map(async function(stat) {
+        //     const statName = stat.stat.name;
+        //     const baseStatValue = stat.base_stat;
+        //     const baseStat = {name: statName, value: parseInt(baseStatValue)};
+        //     const currentStat = {name: statName, value: 0}
+            
+        //     if (statName === 'hp') {
+        //         currentStat.value = Math.floor((2*parseInt(baseStatValue, 10)*newPokemon.level)/100 + newPokemon.level +10)
+        //     } else {
+        //         currentStat.value = Math.floor((2*parseInt(baseStatValue, 10)*newPokemon.level)/100 + 5)
+        //     }
+
+        //     newPokemon.baseStats.push(baseStat);
+        //     newPokemon.currentStats.push(currentStat)
+        // });
 
         //get types
         data.types.map(async function(type) {

@@ -10,7 +10,7 @@ class App extends Component {
     super();
     this.state = {
       identifierField: "",
-      levelField: "",
+      levelField: 0,
       displayPokemon: pikachu,
       pokemonList: [pikachu],
     };
@@ -27,10 +27,11 @@ class App extends Component {
     const eventId = event.target.id;
     const eventValue = event.target.value;
     const { identifierField, levelField } = this.state;
-    console.log(identifierField);
-    console.log(levelField);
+    console.log("identifierField: ",identifierField);
+    console.log("levelField: ", levelField);
+    console.log("event: ", event);
 
-    console.log(event.target.value);
+    console.log("event.target.value: ", event.target.value);
     if (eventId === "searchIdentifier") {
       this.setState({ identifierField: eventValue });
       // this.submitInput(eventValue, levelField);
@@ -38,10 +39,10 @@ class App extends Component {
       this.setState({ levelField: eventValue });
       // this.submitInput(identifierField, eventValue);
     } else {
-      console.log(event);
+      console.log("event: ", event);
     }
 
-    console.log(this.state);
+    console.log("this.state: ", this.state);
   };
 
   async setNewPokemon(identifier, level) {
@@ -96,7 +97,7 @@ class App extends Component {
     });
 
     tempDisplayPoke.currentStats = newStats;
-    this.setState({ displayPokemon: tempDisplayPoke });
+    this.setState({ displayPokemon: tempDisplayPoke, levelField: 1});
     console.log(this.state);
   };
 

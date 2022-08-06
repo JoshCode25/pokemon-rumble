@@ -49,20 +49,20 @@ async function getNewPokemon(identifier, level) {
     });
 
     newPokemon.currentStats = data.stats.map((stat, i) => {
-      const currentName = stat.name;
-      const currentValue = 0;
+      let currentName = stat.name;
+      console.log("stat: ", stat);
+      console.log("currentName: ", currentName);
+      let currentValue = 0;
       if (currentName === "hp") {
+        console.log("HP stat");
         currentValue = Math.floor(
           (2 * parseInt(newPokemon.baseStats[i].value, 10) * newPokemon.level) /
-            100 +
-            newPokemon.level +
-            10
+            100 + newPokemon.level + 10
         );
       } else {
         currentValue = Math.floor(
           (2 * parseInt(newPokemon.baseStats[i].value, 10) * newPokemon.level) /
-            100 +
-            5
+            100 +5
         );
       }
       const currentStat = { name: currentName, value: currentValue };

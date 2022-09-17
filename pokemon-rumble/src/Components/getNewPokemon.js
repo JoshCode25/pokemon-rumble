@@ -49,7 +49,7 @@ async function getNewPokemon(identifier, level) {
     });
 
     newPokemon.currentStats = data.stats.map((stat, i) => {
-      let currentName = stat.name;
+      let currentName = stat.stat.name;
       console.log("stat: ", stat);
       console.log("currentName: ", currentName);
       let currentValue = 0;

@@ -56,19 +56,33 @@ class App extends Component {
     console.log(this.state.displayPokemon);
   }
 
-  submitInput = () => {
+  async submitInput() {
     const { identifierField, levelField } = this.state;
     console.log(identifierField);
     console.log(levelField);
     try {
       if (this.state.levelField > 0 && this.state.identifierField.length > 0) {
-        this.setNewPokemon(identifierField, levelField);
+        await this.setNewPokemon(identifierField, levelField);
       }
     } catch (error) {
       console.log("oops: ", error);
     }
     console.log(this.state);
   };
+
+  // submitInput = () => {
+  //   const { identifierField, levelField } = this.state;
+  //   console.log(identifierField);
+  //   console.log(levelField);
+  //   try {
+  //     if (this.state.levelField > 0 && this.state.identifierField.length > 0) {
+  //       this.setNewPokemon(identifierField, levelField);
+  //     }
+  //   } catch (error) {
+  //     console.log("oops: ", error);
+  //   }
+  //   console.log(this.state);
+  // };
 
   levelUp = () => {
     //update stats
@@ -97,7 +111,7 @@ class App extends Component {
     });
 
     tempDisplayPoke.currentStats = newStats;
-    this.setState({ displayPokemon: tempDisplayPoke, levelField: 1});
+    this.setState({ displayPokemon: tempDisplayPoke, levelField: tempDisplayPoke.level});
     console.log(this.state);
   };
 

@@ -13,34 +13,37 @@ async function getNewPokemon(identifier, level) {
     newPokemon.currentExperience = Math.pow(newPokemon.level, 3);
 
     //get moves
-    await data.moves.map(async function (move) {
+    const movesList = await Promise.all(data.moves.map(async function (move) {
       const moveUrl = move.move.url; //gets move url from pokemon info
       const moveDataResponse = await fetch(moveUrl); //fetch move info
       const moveData = await moveDataResponse.json(); //convert move info to json
-      const levelLearned = move.version_group_details[0].level_learned_at; //get info when the pokemon learns the move
+      return moveData;
+    }))
+    console.log(movesList);
+    //   const levelLearned = move.version_group_details[0].level_learned_at; //get info when the pokemon learns the move
 
-      const moveInfo = {
-        //consolidates move info to add to array
-        name: moveData.name,
-        levelLearnedAt: parseInt(levelLearned, 10),
-        accuracy: parseInt(moveData.accuracy, 10),
-        power: parseInt(moveData.power, 10),
-        type: moveData.type.name,
-        damageClass: moveData.damage_class.name,
-      };
-      // newPokemon.availableMovesList.push(moveInfo);
-      if (levelLearned !== 0) {
-        //only adds moves the pokemon will learn naturally by leveling up
-        newPokemon.learnedMovesList.push(moveInfo);
-      }
-      if (newPokemon.level >= levelLearned && levelLearned !== 0) {
-        //adds moves to current moves depending on pokemon's level
-        newPokemon.currentMovesList.push(moveInfo);
-        if (newPokemon.currentMovesList.length > 4) {
-          newPokemon.currentMovesList.shift();
-        }
-      }
-    });
+    //   const moveInfo = {
+    //     //consolidates move info to add to array
+    //     name: moveData.name,
+    //     levelLearnedAt: parseInt(levelLearned, 10),
+    //     accuracy: parseInt(moveData.accuracy, 10),
+    //     power: parseInt(moveData.power, 10),
+    //     type: moveData.type.name,
+    //     damageClass: moveData.damage_class.name,
+    //   };
+    //   // newPokemon.availableMovesList.push(moveInfo);
+    //   if (levelLearned !== 0) {
+    //     //only adds moves the pokemon will learn naturally by leveling up
+    //     newPokemon.learnedMovesList.push(moveInfo);
+    //   }
+    //   if (newPokemon.level >= levelLearned && levelLearned !== 0) {
+    //     //adds moves to current moves depending on pokemon's level
+    //     newPokemon.currentMovesList.push(moveInfo);
+    //     if (newPokemon.currentMovesList.length > 4) {
+    //       newPokemon.currentMovesList.shift();
+    //     }
+    //   }
+    // });
 
     //get stats
     newPokemon.baseStats = data.stats.map((stat) => {
@@ -50,11 +53,8 @@ async function getNewPokemon(identifier, level) {
 
     newPokemon.currentStats = data.stats.map((stat, i) => {
       let currentName = stat.stat.name;
-      console.log("stat: ", stat);
-      console.log("currentName: ", currentName);
       let currentValue = 0;
       if (currentName === "hp") {
-        console.log("HP stat");
         currentValue = Math.floor(
           (2 * parseInt(newPokemon.baseStats[i].value, 10) * newPokemon.level) /
             100 + newPokemon.level + 10

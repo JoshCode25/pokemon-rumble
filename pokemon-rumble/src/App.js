@@ -56,7 +56,7 @@ class App extends Component {
     console.log(this.state.displayPokemon);
   }
 
-  async submitInput() {
+submitInput = async () => {
     const { identifierField, levelField } = this.state;
     console.log(identifierField);
     console.log(levelField);

@@ -27,21 +27,33 @@ async function getNewPokemon(identifier, level) {
 
       if (levelLearned !== 0) {
 
-          const moveInfo = { //consolidates move info to add to array
-          name: move.move.name,
-          levelLearnedAt: parseInt(levelLearned, 10),
-          accuracy: parseInt(newPokemon.allowableMovesList[i].accuracy, 10),
-          power: parseInt(newPokemon.allowableMovesList[i].power, 10),
-          type: newPokemon.allowableMovesList[i].type.name,
-          damageClass: newPokemon.allowableMovesList[i].damage_class.name,
-          };
+        const moveInfo = { //consolidates move info to add to array
+        name: move.move.name,
+        levelLearnedAt: parseInt(levelLearned, 10),
+        accuracy: parseInt(newPokemon.allowableMovesList[i].accuracy, 10),
+        power: parseInt(newPokemon.allowableMovesList[i].power, 10),
+        type: newPokemon.allowableMovesList[i].type.name,
+        damageClass: newPokemon.allowableMovesList[i].damage_class.name,
+        };
 
-          runningList.push(moveInfo);
+        runningList.push(moveInfo);
       }
       
       return runningList;
     }, []).sort((x,y ) => x.levelLearnedAt - y.levelLearnedAt);
 
+    //set latest 4 moves as currently learned moves
+    newPokemon.currentMovesList = newPokemon.learnedMovesList.reduce((runningList, move) => {
+
+      if (move.levelLearnedAt <= parseInt(newPokemon.level, 10)) {
+        runningList.push(move);
+      }
+      if (runningList.length > 4) {
+        runningList.shift();
+      }
+
+      return runningList;
+    }, [])
     //   if (newPokemon.level >= levelLearned && levelLearned !== 0) {
     //     //adds moves to current moves depending on pokemon's level
     //     newPokemon.currentMovesList.push(moveInfo);

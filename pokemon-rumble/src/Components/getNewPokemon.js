@@ -54,14 +54,6 @@ async function getNewPokemon(identifier, level) {
 
       return runningList;
     }, [])
-    //   if (newPokemon.level >= levelLearned && levelLearned !== 0) {
-    //     //adds moves to current moves depending on pokemon's level
-    //     newPokemon.currentMovesList.push(moveInfo);
-    //     if (newPokemon.currentMovesList.length > 4) {
-    //       newPokemon.currentMovesList.shift();
-    //     }
-    //   }
-    // });
 
     //get stats
     newPokemon.baseStats = data.stats.map((stat) => {

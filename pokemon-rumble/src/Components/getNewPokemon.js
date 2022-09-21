@@ -21,27 +21,26 @@ async function getNewPokemon(identifier, level) {
       return moveData;
     }))
 
-    //reduce to only moves learned naturally
-    newPokemon.learnedMovesList = data.moves.reduce((runningList, move) => {
-    
-      const levelLearned = move.version_group_details[0].level_learned_at; //get info when the pokemon learns the move
+    //reduce to only moves learned naturally in ascending order
+    newPokemon.learnedMovesList = data.moves.reduce((runningList, move, i) => {
+      const levelLearned = move.version_group_details[0].level_learned_at;
 
       if (levelLearned !== 0) {
 
           const moveInfo = { //consolidates move info to add to array
           name: move.move.name,
           levelLearnedAt: parseInt(levelLearned, 10),
-          // accuracy: parseInt(move.accuracy, 10),
-          // power: parseInt(move.power, 10),
-          // type: move.type.name,
-          // damageClass: move.damage_class.name,
+          accuracy: parseInt(newPokemon.allowableMovesList[i].accuracy, 10),
+          power: parseInt(newPokemon.allowableMovesList[i].power, 10),
+          type: newPokemon.allowableMovesList[i].type.name,
+          damageClass: newPokemon.allowableMovesList[i].damage_class.name,
           };
 
           runningList.push(moveInfo);
       }
       
       return runningList;
-  }, [])
+    }, []).sort((x,y ) => x.levelLearnedAt - y.levelLearnedAt);
 
     //   if (newPokemon.level >= levelLearned && levelLearned !== 0) {
     //     //adds moves to current moves depending on pokemon's level

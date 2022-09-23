@@ -7,11 +7,13 @@ async function getNewPokemon(identifier, level) {
     const url = `https://pokeapi.co/api/v2/pokemon/${identifier}`; //adjusts url based on id given
     const response = await fetch(url);
     const data = await response.json();
+    newPokemon.speciesData = await (await fetch(data.species.url)).json();
+    newPokemon.evolutionData = await (await fetch(newPokemon.speciesData.evolution_chain.url)).json();
     newPokemon.data = data;
     newPokemon.name = data.name;
     newPokemon.id = data.id;
     newPokemon.baseExperience = data.base_experience;
-    newPokemon.currentExperience = Math.pow(newPokemon.level, 3);
+    newPokemon.currentExperience = newPokemon.level ** 3;
 
     //get moves
     newPokemon.allowableMovesList = await Promise.all(data.moves.map(async function (move) {
@@ -44,8 +46,8 @@ async function getNewPokemon(identifier, level) {
 
     //set latest 4 moves as currently learned moves
     newPokemon.currentMovesList = newPokemon.learnedMovesList.reduce((runningList, move) => {
-
-      if (move.levelLearnedAt <= parseInt(newPokemon.level, 10)) {
+      
+      if (move.levelLearnedAt <= newPokemon.level) {
         runningList.push(move);
       }
       if (runningList.length > 4) {
@@ -57,42 +59,26 @@ async function getNewPokemon(identifier, level) {
 
     //get stats
     newPokemon.baseStats = data.stats.map((stat) => {
-      const baseInfo = { name: stat.name, value: parseInt(stat.base_stat) };
+      const baseInfo = { name: stat.stat.name, value: parseInt(stat.base_stat) };
       return baseInfo;
     });
 
-    newPokemon.currentStats = data.stats.map((stat, i) => {
-      let currentName = stat.stat.name;
+    //calculate current stats based on pokemon level
+    newPokemon.currentStats = newPokemon.baseStats.map((stat, i) => {
+      let baseStat = newPokemon.baseStats[i].value;
+      let currentLevel = newPokemon.level;
+      let currentName = stat.name;
       let currentValue = 0;
+
       if (currentName === "hp") {
-        currentValue = Math.floor(
-          (2 * parseInt(newPokemon.baseStats[i].value, 10) * newPokemon.level) /
-            100 + newPokemon.level + 10
-        );
+        currentValue = Math.floor((2 * baseStat * currentLevel) / 100 + currentLevel + 10);
       } else {
-        currentValue = Math.floor(
-          (2 * parseInt(newPokemon.baseStats[i].value, 10) * newPokemon.level) /
-            100 +5
-        );
+        currentValue = Math.floor((2 * baseStat * currentLevel) / 100 + 5);
       }
+
       const currentStat = { name: currentName, value: currentValue };
       return currentStat;
     });
-    // data.stats.map(async function(stat) {
-    //     const statName = stat.stat.name;
-    //     const baseStatValue = stat.base_stat;
-    //     const baseStat = {name: statName, value: parseInt(baseStatValue)};
-    //     const currentStat = {name: statName, value: 0}
-
-    //     if (statName === 'hp') {
-    //         currentStat.value = Math.floor((2*parseInt(baseStatValue, 10)*newPokemon.level)/100 + newPokemon.level +10)
-    //     } else {
-    //         currentStat.value = Math.floor((2*parseInt(baseStatValue, 10)*newPokemon.level)/100 + 5)
-    //     }
-
-    //     newPokemon.baseStats.push(baseStat);
-    //     newPokemon.currentStats.push(currentStat)
-    // });
 
     //get types
     data.types.map(async function (type) {
@@ -112,11 +98,26 @@ async function getNewPokemon(identifier, level) {
         newPokemon.spriteList.push(spriteObject);
       }
     }
+
+    //get evolution info
+    let evolutionChain = newPokemon.evolutionData.chain.evolves_to[0];
+    // let evolutionTrigger = newPokemon.evolutionData.chain.evolution_details[0].trigger.name;
+    // let evolutionMinLevel = (evolutionTrigger === 'level-up') ? newPokemon.evolutionData.chain.evolution_details[0].min_level : 0;
+
+    newPokemon.evolutionInfo = {
+      chain : evolutionChain,
+      // trigger : evolutionTrigger,
+      // minLevel : evolutionMinLevel
+    };
+  
+
+    return newPokemon;
+
   } catch (error) {
     console.log(error);
+    return error
   } finally {
     console.log(newPokemon);
-    return newPokemon;
   }
 }
 

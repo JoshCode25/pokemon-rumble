@@ -1,7 +1,7 @@
 export default class Pokemon {
   constructor(identifier, level) {
     //id can be a pokemon's name or number
-    this.level = level;
+    this.level = (typeof level ==='number') ? level : parseInt(level, 10);
 
     this.name = "";
     this.id = "";

@@ -127,13 +127,13 @@ async function getNewPokemon(identifier, level) {
 
         if(triggerType) {
           pokemonStageInfo.evolutionType = triggerType;
-          pokemonStageInfo.evolveTrigger = (triggerType === 'use-item') ? 
+          pokemonStageInfo.evolutionTrigger = (triggerType === 'use-item') ? 
             currentStage.evolves_to[0].evolution_details[0].item.name : currentStage.evolves_to[0].evolution_details[0].min_level;
           pokemonStageInfo.evolveToName = currentStage.evolves_to[0].species.name
           pokemonStageInfo.evolveToUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonStageInfo.evolveToName}`;
         } else {
           pokemonStageInfo.evolutionType = 'Final Stage';
-          pokemonStageInfo.evolveTrigger = 'Final Stage';
+          pokemonStageInfo.evolutionTrigger = 'Final Stage';
           pokemonStageInfo.evolveToName = 'Final Stage'
           pokemonStageInfo.evolveToUrl = `Final Stage`;
         }
@@ -147,7 +147,13 @@ async function getNewPokemon(identifier, level) {
 
       } while(continueNum > 0)
 
+      //establish current stage evolution info
       newPokemon.evolutionChain = evolutionArray;
+      newPokemon.currentStage = newPokemon.evolutionChain.find(stage => stage.stageName === newPokemon.name);
+      newPokemon.evolutionType = newPokemon.currentStage.evolutionType;
+      newPokemon.evolutionTrigger = newPokemon.currentStage.evolutionTrigger;
+      newPokemon.nextStage = (newPokemon.evolutionChain[newPokemon.currentStage.stageNumber]) ? 
+        newPokemon.evolutionChain[newPokemon.currentStage.stageNumber] : '';
 
     }  
 

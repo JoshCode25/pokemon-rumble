@@ -104,6 +104,23 @@ function getNewStats(data, level) {
 
 }
 
+function getNewSprites(data) {
+
+  let spriteList = [];
+
+  for (let spriteKey in data.sprites) {
+    const spriteName = spriteKey;
+    const spriteUrl = data.sprites[spriteKey];
+    const spriteObject = { name: spriteName, url: spriteUrl };
+    if (spriteName !== "versions" && spriteName !== "other") {
+      spriteList.push(spriteObject);
+    }
+  }
+
+  return spriteList;
+
+}
+
 async function getNewPokemon(identifier, level) {
   const newPokemon = new Pokemon(identifier, level);
 
@@ -134,14 +151,7 @@ async function getNewPokemon(identifier, level) {
     newPokemon.types = getNewTypes(newPokemon.data);
 
     //get sprites
-    for (let spriteKey in data.sprites) {
-      const spriteName = spriteKey;
-      const spriteUrl = data.sprites[spriteKey];
-      const spriteObject = { name: spriteName, url: spriteUrl };
-      if (spriteName !== "versions" && spriteName !== "other") {
-        newPokemon.spriteList.push(spriteObject);
-      }
-    }
+    newPokemon.spriteList = getNewSprites(data);
 
     //get evolution info
     newPokemon.speciesData = await (await fetch(data.species.url)).json();

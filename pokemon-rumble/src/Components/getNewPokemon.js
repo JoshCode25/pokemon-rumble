@@ -37,6 +37,68 @@ async function getNewMoves(data) {
   return newMoves;
 }
 
+async function getNewEvolutionChain(data) {
+
+  let speciesData = await (await fetch(data.species.url)).json();
+  let evolutionChainData = await (await fetch(speciesData.evolution_chain.url)).json();
+  let newEvolutionChain = {};
+
+  let doesEvolve = (evolutionChainData.chain.evolves_to.length > 0) ? true : false;
+
+  if (doesEvolve) {
+    let currentStage = evolutionChainData.chain;
+    let stageNumber = 1;
+    let triggerType = '';
+    let evolutionArray = [];
+    let continueNum = 2;
+    
+    //cycle through evolution stage objects until there isn't a deeper level
+    do {
+      //if there isn't another level deeper, run one more time
+      continueNum = (currentStage.evolves_to.length > 0) ? 2:1;
+
+      triggerType = (continueNum > 1) ? currentStage.evolves_to[0].evolution_details[0].trigger.name : '';
+
+      let pokemonStageInfo = {
+        stageNumber : stageNumber,
+        stageName : currentStage.species.name,
+        stageUrl : '',
+      }
+
+      if(triggerType) {
+        pokemonStageInfo.evolutionType = triggerType;
+        pokemonStageInfo.evolutionTrigger = (triggerType === 'use-item') ? 
+          currentStage.evolves_to[0].evolution_details[0].item.name : currentStage.evolves_to[0].evolution_details[0].min_level;
+        pokemonStageInfo.evolveToName = currentStage.evolves_to[0].species.name
+        pokemonStageInfo.evolveToUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonStageInfo.evolveToName}`;
+      } else {
+        pokemonStageInfo.evolutionType = 'Final Stage';
+        pokemonStageInfo.evolutionTrigger = 'Final Stage';
+        pokemonStageInfo.evolveToName = 'Final Stage'
+        pokemonStageInfo.evolveToUrl = `Final Stage`;
+      }
+
+      pokemonStageInfo.stageUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonStageInfo.stageName}`;
+
+      evolutionArray.push(pokemonStageInfo);
+      stageNumber++;
+      currentStage = currentStage.evolves_to[0]; //make the next level deeper the current level for the next loop
+      continueNum--;
+
+    } while(continueNum > 0)
+
+    //establish current stage evolution info
+    newPokemon.evolutionChain = evolutionArray;
+    newPokemon.currentStage = newPokemon.evolutionChain.find(stage => stage.stageName === newPokemon.name);
+    newPokemon.evolutionType = newPokemon.currentStage.evolutionType;
+    newPokemon.evolutionTrigger = newPokemon.currentStage.evolutionTrigger;
+    newPokemon.nextStage = (newPokemon.evolutionChain[newPokemon.currentStage.stageNumber]) ? 
+      newPokemon.evolutionChain[newPokemon.currentStage.stageNumber] : '';
+
+  }  
+
+}
+
 function getNewTypes(data) {
 
   let newTypes = data.types.map(function (type) {
@@ -154,62 +216,7 @@ async function getNewPokemon(identifier, level) {
     newPokemon.spriteList = getNewSprites(data);
 
     //get evolution info
-    newPokemon.speciesData = await (await fetch(data.species.url)).json();
-    newPokemon.evolutionChainData = await (await fetch(newPokemon.speciesData.evolution_chain.url)).json();
 
-    let doesEvolve = (newPokemon.evolutionChainData.chain.evolves_to.length > 0) ? true : false;
-
-    if (doesEvolve) {
-      let currentStage = newPokemon.evolutionChainData.chain;
-      let stageNumber = 1;
-      let triggerType = '';
-      let evolutionArray = [];
-      let continueNum = 2;
-      
-      //cycle through evolution stage objects until there isn't a deeper level
-      do {
-        //if there isn't another level deeper, run one more time
-        continueNum = (currentStage.evolves_to.length > 0) ? 2:1;
-
-        triggerType = (continueNum > 1) ? currentStage.evolves_to[0].evolution_details[0].trigger.name : '';
-
-        let pokemonStageInfo = {
-          stageNumber : stageNumber,
-          stageName : currentStage.species.name,
-          stageUrl : '',
-        }
-
-        if(triggerType) {
-          pokemonStageInfo.evolutionType = triggerType;
-          pokemonStageInfo.evolutionTrigger = (triggerType === 'use-item') ? 
-            currentStage.evolves_to[0].evolution_details[0].item.name : currentStage.evolves_to[0].evolution_details[0].min_level;
-          pokemonStageInfo.evolveToName = currentStage.evolves_to[0].species.name
-          pokemonStageInfo.evolveToUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonStageInfo.evolveToName}`;
-        } else {
-          pokemonStageInfo.evolutionType = 'Final Stage';
-          pokemonStageInfo.evolutionTrigger = 'Final Stage';
-          pokemonStageInfo.evolveToName = 'Final Stage'
-          pokemonStageInfo.evolveToUrl = `Final Stage`;
-        }
-
-        pokemonStageInfo.stageUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonStageInfo.stageName}`;
-
-        evolutionArray.push(pokemonStageInfo);
-        stageNumber++;
-        currentStage = currentStage.evolves_to[0]; //make the next level deeper the current level for the next loop
-        continueNum--;
-
-      } while(continueNum > 0)
-
-      //establish current stage evolution info
-      newPokemon.evolutionChain = evolutionArray;
-      newPokemon.currentStage = newPokemon.evolutionChain.find(stage => stage.stageName === newPokemon.name);
-      newPokemon.evolutionType = newPokemon.currentStage.evolutionType;
-      newPokemon.evolutionTrigger = newPokemon.currentStage.evolutionTrigger;
-      newPokemon.nextStage = (newPokemon.evolutionChain[newPokemon.currentStage.stageNumber]) ? 
-        newPokemon.evolutionChain[newPokemon.currentStage.stageNumber] : '';
-
-    }  
 
     return newPokemon;
 

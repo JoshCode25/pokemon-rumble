@@ -225,7 +225,7 @@ async function getNewPokemon(identifier, level) {
 
   } catch (error) {
     console.log(error);
-    return error
+    return false
   } finally {
     console.log(newPokemon);
   }

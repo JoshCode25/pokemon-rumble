@@ -33,10 +33,12 @@ class App extends Component {
 
     console.log("event.target.value: ", event.target.value);
     if (eventId === "searchIdentifier") {
-      this.setState({ identifierField: eventValue });
+      let newSearchIdentifier = eventValue.toLowerCase();
+      this.setState({ identifierField: newSearchIdentifier });
       // this.submitInput(eventValue, levelField);
     } else if (eventId === "searchLevel") {
-      this.setState({ levelField: eventValue });
+      let newSearchLevel = (typeof eventValue === 'number') ? eventValue : parseInt(eventValue, 10);
+      this.setState({ levelField: newSearchLevel });
       // this.submitInput(identifierField, eventValue);
     } else {
       console.log("event: ", event);
@@ -47,27 +49,31 @@ class App extends Component {
 
   async setNewPokemon(identifier, level) {
     const newPokemon = await getNewPokemon(identifier, level);
-    console.log(newPokemon.spriteList.length);
-    console.log(newPokemon.learnedMovesList.length);
-    console.log(newPokemon.currentMovesList.length);
-    console.log(newPokemon.currentStats.length);
-    this.setState({ pokemonList: [...this.state.pokemonList, newPokemon] });
-    this.setState({ displayPokemon: newPokemon });
-    console.log(this.state.displayPokemon);
+    console.log(newPokemon);
+    if (newPokemon) {
+      this.setState({ pokemonList: [...this.state.pokemonList, newPokemon] });
+      this.setState({ displayPokemon: newPokemon });
+    } else {
+      typeof identifier === 'number' ? alert(`Sorry, ${identifier} is not a valid Pokemon Number`) 
+        : alert(`Sorry, ${identifier} is not a valid Pokemon Name`);
+    }
   }
 
-submitInput = async () => {
-    const { identifierField, levelField } = this.state;
-    console.log(identifierField);
-    console.log(levelField);
-    try {
-      if (this.state.levelField > 0 && this.state.identifierField.length > 0) {
-        await this.setNewPokemon(identifierField, levelField);
-      }
-    } catch (error) {
-      console.log("oops: ", error);
+  submitInput = async () => {
+
+    if (this.state.levelField > 0 && this.state.levelField <= 100) {
+        const { identifierField, levelField } = this.state;
+        try {
+          if (this.state.levelField > 0 && this.state.identifierField.length > 0) {
+            await this.setNewPokemon(identifierField, levelField);
+          }
+        } catch (error) {
+          console.log("oops: ", error);
+        }
+    } else {
+      alert('Sorry, a Pokemon\'s level must be from 1 - 100');
     }
-    console.log(this.state);
+
   };
 
   // submitInput = () => {
@@ -112,7 +118,6 @@ submitInput = async () => {
 
     tempDisplayPoke.currentStats = newStats;
     this.setState({ displayPokemon: tempDisplayPoke, levelField: tempDisplayPoke.level});
-    console.log(this.state);
   };
 
   render() {

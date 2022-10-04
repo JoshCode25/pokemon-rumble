@@ -39,6 +39,7 @@ async function getNewMoves(data) {
 
 async function getNewEvolutionChain(data) {
 
+  let newName = data.name;
   let speciesData = await (await fetch(data.species.url)).json();
   let evolutionChainData = await (await fetch(speciesData.evolution_chain.url)).json();
   let newEvolutionChain = {};
@@ -88,14 +89,15 @@ async function getNewEvolutionChain(data) {
     } while(continueNum > 0)
 
     //establish current stage evolution info
-    newPokemon.evolutionChain = evolutionArray;
-    newPokemon.currentStage = newPokemon.evolutionChain.find(stage => stage.stageName === newPokemon.name);
-    newPokemon.evolutionType = newPokemon.currentStage.evolutionType;
-    newPokemon.evolutionTrigger = newPokemon.currentStage.evolutionTrigger;
-    newPokemon.nextStage = (newPokemon.evolutionChain[newPokemon.currentStage.stageNumber]) ? 
-      newPokemon.evolutionChain[newPokemon.currentStage.stageNumber] : '';
+    newEvolutionChain.currentEvolutionStage = evolutionArray.find(stage => stage.stageName === newName);
+    newEvolutionChain.evolutionType = newEvolutionChain.currentEvolutionStage.evolutionType;
+    newEvolutionChain.evolutionTrigger = newEvolutionChain.currentEvolutionStage.evolutionTrigger;
+    newEvolutionChain.nextStage = (evolutionArray[newEvolutionChain.currentEvolutionStage.stageNumber]) ? 
+      evolutionArray[newEvolutionChain.currentEvolutionStage.stageNumber] : '';
 
   }  
+
+  return newEvolutionChain;
 
 }
 
@@ -216,7 +218,8 @@ async function getNewPokemon(identifier, level) {
     newPokemon.spriteList = getNewSprites(data);
 
     //get evolution info
-
+    ({currentEvolutionStage: newPokemon.currentStage, evolutionType: newPokemon.evolutionType, evolutionTrigger: newPokemon.evolutionTrigger,
+      nextStage: newPokemon.nextStage} = await getNewEvolutionChain(newPokemon.data));
 
     return newPokemon;
 

@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/pokemon-rumble/index.html/static/css/main.a617e044.chunk.css",
+    "main.js": "/pokemon-rumble/index.html/static/js/main.d478ef27.chunk.js",
+    "main.js.map": "/pokemon-rumble/index.html/static/js/main.d478ef27.chunk.js.map",
+    "runtime-main.js": "/pokemon-rumble/index.html/static/js/runtime-main.a4bdf752.js",
+    "runtime-main.js.map": "/pokemon-rumble/index.html/static/js/runtime-main.a4bdf752.js.map",
+    "static/css/2.6d7c7915.chunk.css": "/pokemon-rumble/index.html/static/css/2.6d7c7915.chunk.css",
+    "static/js/2.791e2be6.chunk.js": "/pokemon-rumble/index.html/static/js/2.791e2be6.chunk.js",
+    "static/js/2.791e2be6.chunk.js.map": "/pokemon-rumble/index.html/static/js/2.791e2be6.chunk.js.map",
+    "static/js/3.d1175a9f.chunk.js": "/pokemon-rumble/index.html/static/js/3.d1175a9f.chunk.js",
+    "static/js/3.d1175a9f.chunk.js.map": "/pokemon-rumble/index.html/static/js/3.d1175a9f.chunk.js.map",
+    "index.html": "/pokemon-rumble/index.html/index.html",
+    "static/css/2.6d7c7915.chunk.css.map": "/pokemon-rumble/index.html/static/css/2.6d7c7915.chunk.css.map",
+    "static/css/main.a617e044.chunk.css.map": "/pokemon-rumble/index.html/static/css/main.a617e044.chunk.css.map",
+    "static/js/2.791e2be6.chunk.js.LICENSE.txt": "/pokemon-rumble/index.html/static/js/2.791e2be6.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a4bdf752.js",
+    "static/css/2.6d7c7915.chunk.css",
+    "static/js/2.791e2be6.chunk.js",
+    "static/css/main.a617e044.chunk.css",
+    "static/js/main.d478ef27.chunk.js"
+  ]
+}
